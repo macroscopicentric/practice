@@ -114,6 +114,7 @@ def buildGraphFunctional(wordFile):
 def buildGraphSlice(wordFile):
     d = {}
     g = Graph()
+    enum = enumerate
     # create buckets of words that differ by one letter
     with open(wordFile) as wfile:
         for line in wfile:
@@ -126,7 +127,7 @@ def buildGraphSlice(wordFile):
                     d[bucket] = [word]
     # add vertices and edges for words in the same bucket
     for bucket in d.keys():
-        for index, word1 in enumerate(d[bucket]):
+        for index, word1 in enum(d[bucket]):
             for word2 in d[bucket][index:]:
                     g.addEdge(word1,word2)
     return g
@@ -156,12 +157,15 @@ def buildGraphRecurse(wordFile):
         buildHelper(d[bucket])
     return g
 
-sowpods = '../job_prep/recursion/sowpods.txt'
-print "buildGraphOriginal: %s seconds." % (round(timeit.timeit('buildGraphOriginal(sowpods)', setup='from __main__ import buildGraphOriginal, sowpods', number=10), 2))
+sowpods = '../recursion/sowpods.txt'
+print "buildGraphOriginal: %s seconds." % (round(timeit.timeit('buildGraphOriginal(sowpods)', setup='from __main__ import buildGraphOriginal, sowpods', number=1), 2))
 # print "buildGraphListComp: %s seconds." % (round(timeit.timeit('buildGraphListComp(sowpods)', setup='from __main__ import buildGraphListComp, sowpods', number=1), 2))
-# print "buildGraphFunctional: %s seconds." % (round(timeit.timeit('buildGraphFunctional(sowpods)', setup='from __main__ import buildGraphFunctional, sowpods', number=1), 2))
+print "buildGraphFunctional: %s seconds." % (round(timeit.timeit('buildGraphFunctional(sowpods)', setup='from __main__ import buildGraphFunctional, sowpods', number=1), 2))
 # print "buildGraphSlice: %s seconds." % (round(timeit.timeit('buildGraphSlice(sowpods)', setup='from __main__ import buildGraphSlice, sowpods', number=1), 2))
-# print "buildGraphRecurse: %s seconds." % (round(timeit.timeit('buildGraphRecurse(sowpods)', setup='from __main__ import buildGraphRecurse, sowpods', number=10), 2))
+# print "buildGraphRecurse: %s seconds." % (round(timeit.timeit('buildGraphRecurse(sowpods)', setup='from __main__ import buildGraphRecurse, sowpods', number=1), 2))
+
+#addNeighbor = unidirectional, so need for loop to add in both directions. Therefore slicing and recursive solutions above are wrong.
+#Amber's hypothesis: slicing = copying (costly), which is why those versions were slower anyway.
 
 # print "buildGraphOriginal: %s" % (profile.run('buildGraphOriginal(sowpods)'))
 # print "buildGraphRecurse: %s" % (profile.run('buildGraphRecurse(sowpods)'))
